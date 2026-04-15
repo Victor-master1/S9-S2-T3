@@ -1,25 +1,40 @@
 document.getElementById('registroForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Evita que la página se recargue
+    event.preventDefault();
+    
+    // Limpiar errores previos
+    document.querySelectorAll('.error-msg').forEach(el => el.textContent = '');
 
-    // Obtener los valores de los campos
-    const nombre = document.getElementById('nombre').value;
-    const correo = document.getElementById('correo').value;
-    const telefono = document.getElementById('telefono').value;
-    const curso = document.getElementById('curso').value;
+    const datos = {
+        nombre: document.getElementById('nombre').value.trim(),
+        correo: document.getElementById('correo').value.trim(),
+        telefono: document.getElementById('telefono').value.trim(),
+        curso: document.getElementById('curso').value
+    };
 
-    // Validación simple
-    if (nombre && correo && telefono) {
-        console.log("Datos registrados:");
-        console.log("Nombre:", nombre);
-        console.log("Correo:", correo);
-        console.log("Teléfono:", telefono);
-        console.log("Curso:", curso);
+    let esValido = true;
 
-        alert("¡Registro exitoso para " + nombre + "!");
-        
-        // Limpiar el formulario
+    // Validación de Nombre
+    if (datos.nombre.length < 3) {
+        document.getElementById('error-nombre').textContent = "El nombre es muy corto.";
+        esValido = false;
+    }
+
+    // Validación de Correo (Regex)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(datos.correo)) {
+        document.getElementById('error-correo').textContent = "Ingresa un correo válido.";
+        esValido = false;
+    }
+
+    // Validación de Teléfono (mínimo 9 dígitos para Perú)
+    if (datos.telefono.length < 9) {
+        document.getElementById('error-telefono').textContent = "Número de teléfono inválido.";
+        esValido = false;
+    }
+
+    if (esValido) {
+        console.log("¡Éxito!", datos);
+        alert(`¡Registro exitoso!\nBienvenido al curso de ${datos.curso}, ${datos.nombre}.`);
         this.reset();
-    } else {
-        alert("Por favor, completa todos los campos.");
     }
 });
